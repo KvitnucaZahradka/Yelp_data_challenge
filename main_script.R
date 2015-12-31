@@ -139,6 +139,14 @@ final_table_rev[which(rownames(final_table_rev) %in% rownames(final_table_tip)),
 
 table_final<-final_table_rev
 
+### In order to compare the measure of inferiority of a given business we need to rescale a given occurence with the number of reviews in a given year
+
+frequency_bus_las_rev<-sapply(set,function(x){cafe<-busS(data_rev=rev,data=bus,city=las,business="Cafes",year=as.numeric(x));cafe<-getWholeBusiness(cafe);cafe<-length(cafe$text)})
+frequency_bus_las_tips<-sapply(set,function(x){cafe<-busS(data_rev=tip,data=bus,city=las,business="Cafes",year=as.numeric(x));cafe<-getWholeBusiness(cafe);cafe<-length(cafe$text)})
+frek<-frequency_bus_las_rev+frequency_bus_las_tips
+
+for(i in c(1:nrow(table_final))){table_final[i,]<-table_final[i,]/frek[i]}
+
 ## Forecasting and plotting
 
 ### For the forecasting we created the class predic, we want to turn on the nnetar() model together with Arima with order=c(0,1,4) and auto.arima().
